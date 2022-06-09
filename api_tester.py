@@ -1,14 +1,19 @@
 import fire
 import requests
 
+# NOTE: Adjust these settings as needed
 API_HOST = "http://localhost:8000"
-RESOURCE_URI = "cookie_stands"
+RESOURCE_URI = "cookie-stands"
 USERNAME = "admin"
 PASSWORD = "admin"
 
 
 class ApiTester:
-    """CLI for testing API"""
+    """CLI for testing API
+    Server must be running.
+    WARNING: Database queries are performed on supplied database.
+        So be extra careful and/or use a test database.
+    """
 
     def __init__(self, host=API_HOST):
         self.host = host
@@ -48,7 +53,7 @@ class ApiTester:
 
         response = requests.get(url, headers=headers)
 
-        return response.json()
+        return response.json() or "No resources"
 
     def get_one(self, id):
         """get 1 resource by id from api
@@ -117,7 +122,7 @@ class ApiTester:
             "Authorization": f"Bearer {access_token}",
         }
 
-        original = self.get_cookiestand(id)
+        original = self.get_one(id)
 
         data = {
             "name": name or original["name"],
